@@ -6,6 +6,7 @@ import {
   Param,
   NotFoundException,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
@@ -41,6 +42,15 @@ export class UsersController {
   ): Promise<User> {
     try {
       return await this.usersService.update(id, updateUserDto);
+    } catch {
+      throw new NotFoundException();
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    try {
+      await this.usersService.delete(id);
     } catch {
       throw new NotFoundException();
     }
