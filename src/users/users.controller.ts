@@ -5,9 +5,10 @@ import {
   Post,
   Param,
   NotFoundException,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserDto } from './dto/user.dto';
 import { User } from './schemas/user.schema';
 
 @Controller('users')
@@ -15,7 +16,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: UserDto) {
     await this.usersService.create(createUserDto);
   }
 
@@ -28,6 +29,18 @@ export class UsersController {
   async find(@Param('id') id: string): Promise<User> {
     try {
       return await this.usersService.find(id);
+    } catch {
+      throw new NotFoundException();
+    }
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UserDto,
+  ): Promise<User> {
+    try {
+      return await this.usersService.update(id, updateUserDto);
     } catch {
       throw new NotFoundException();
     }
