@@ -10,7 +10,23 @@ services:
       - db
     ports:
       - '80:3000'
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
 
+  soap-server:
+    image: 'brunoprocopio/soap-api'
+    container_name: SOAP_SERVER
+    ports:
+      - '9876:9876'
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.3
+        
   db:
     image: 'mongo'
     container_name: DB
@@ -18,3 +34,12 @@ services:
       - '27017:27017'
     volumes:
       - ./data/db:/data/db
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.4
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
